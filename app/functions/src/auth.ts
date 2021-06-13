@@ -12,12 +12,12 @@ const login = functions.https.onRequest((request, response) => {
     response.send(`
     <html>
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <body>
+      <body style="padding: 20px;">
         <form action="/login" method="post">
           <input type="hidden"
             name="responseurl" value="${request.query.responseurl}" />
-          <button type="submit" style="font-size:14pt">
-            Link this service to Google
+          <button type="submit" style="font-size:14pt; padding: 20px; background: #555; color: #eee">
+            Link HOME ENV to Google
           </button>
         </form>
       </body>

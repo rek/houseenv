@@ -42,3 +42,11 @@ export const fan = {
     supportsFanSpeedPercent: true,
   },
 };
+
+export const normalizeFields = (fields: any) => {
+  return {
+    fanSpeed: fields.fanSpeed,
+    fanSpeedPercent: fields.fanSpeedPercent,
+    on: fields.on,
+  };
+};

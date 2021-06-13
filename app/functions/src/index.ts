@@ -5,6 +5,7 @@ import admin from "firebase-admin";
 import { faketoken, fakeauth, login, auth } from "./auth";
 import { getSmarthome } from "./smarthome";
 import { FanState } from "./types";
+import { getTempSync } from "./syncTemp";
 
 // Initialize Firebase
 admin.initializeApp();
@@ -87,6 +88,8 @@ const updatestate = functions.https.onRequest((request, response) => {
 });
 
 const smarthome = getSmarthome(admin);
+const syncTemp = getTempSync(admin);
+
 export {
   requestsync,
   smarthome,
@@ -95,4 +98,5 @@ export {
   faketoken,
   fakeauth,
   login,
+  syncTemp,
 };

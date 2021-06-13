@@ -2,3 +2,5 @@
 node_modules
 house-control-d9800-56138041dcec.json
 ui-debug.log
+# generated files
+app/functions/lib

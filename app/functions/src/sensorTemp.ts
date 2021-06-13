@@ -1,7 +1,7 @@
 export const thermostat = {
   id: "thermostat1",
   type: "action.devices.types.SENSOR",
-  traits: ["action.devices.traits.TemperatureSetting"],
+  traits: ["action.devices.traits.TemperatureControl"],
   name: {
     defaultNames: ["Top Env Box"],
     name: "Thermostat",
@@ -9,15 +9,22 @@ export const thermostat = {
   },
   deviceInfo: {
     manufacturer: "Unknown",
-    model: "Unknown",
+    model: "DHT22",
     hwVersion: "Unknown",
     swVersion: "Unknown",
   },
   willReportState: true,
   attributes: {
-    thermostatTemperatureUnit: "C",
-    commandOnlyTemperatureSetting: false,
-    queryOnlyTemperatureSetting: true,
+    temperatureUnitForUX: "C",
+    queryOnlyTemperatureControl: true,
+
+    temperatureRange: {
+      minThresholdCelsius: -20,
+      maxThresholdCelsius: 50,
+    },
+
+    // TemperatureSetting
+    // thermostatTemperatureUnit: "C",
     // sensorStatesSupported: [
     //   {
     //     name: "CarbonMonoxideLevel",
@@ -27,4 +34,14 @@ export const thermostat = {
     //   },
     // ],
   },
+};
+
+export const defaultValuesTmp = {
+  temperatureAmbientCelsius: 0,
+};
+
+export const normalizeFields = (fields: any) => {
+  return {
+    temperatureAmbientCelsius: fields.temperatureAmbientCelsius,
+  };
 };

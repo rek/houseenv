@@ -12,7 +12,8 @@ import {
   // ThermostatState,
 } from "./types";
 import { fan } from "./fan";
-import { thermostat } from "./thermostat2";
+import { thermostat, defaultValuesTmp } from "./sensorTemp";
+import { sensorCo2, defaultValuesCo2 } from "./sensorCo2";
 
 // Hardcoded user ID
 const USER_ID = "123";
@@ -28,7 +29,7 @@ export const getSmarthome = (admin: any) => {
       requestId: body.requestId,
       payload: {
         agentUserId: USER_ID,
-        devices: [fan, thermostat],
+        devices: [fan, thermostat, sensorCo2],
       },
     };
   });
@@ -37,17 +38,39 @@ export const getSmarthome = (admin: any) => {
     const snapshot = await firebaseRef.child(deviceId).once("value");
     const snapshotVal = snapshot.val();
 
-    return snapshotVal;
+    if (snapshotVal) {
+      return snapshotVal;
+    }
 
-    // if (["fan1"].includes(deviceId)) {
-    //   return await queryFirebaseFan(deviceId);
-    // }
+    // insert inital data!
+    console.log("Need to insert initial data");
 
-    // if (["thermostat1"].includes(deviceId)) {
-    //   return await queryFirebaseThermostat(deviceId);
-    // }
+    let data: DeviceState | undefined;
 
-    // return Promise.reject(`Device ${deviceId} not found`);
+    if (deviceId === "fan1") {
+      data = {
+        fanSpeed: "speed_high",
+        fanSpeedPercent: 100,
+        tempThreshold: 23,
+        systemMode: 1,
+        on: false,
+      };
+    }
+
+    if (deviceId === "thermostat1") {
+      data = defaultValuesTmp;
+    }
+
+    if (deviceId === "co21") {
+      data = defaultValuesCo2;
+    }
+
+    if (data) {
+      await firebaseRef.child(deviceId).update(data);
+      return data;
+    }
+
+    return Promise.reject(`Device ${deviceId} not found`);
   };
 
   // A QUERY intent includes a set of devices.
@@ -87,20 +110,18 @@ export const getSmarthome = (admin: any) => {
     const { params, command } = execution;
 
     let state: Object | undefined;
-    let ref: database.Reference | undefined;
+    const ref: database.Reference = firebaseRef.child(deviceId);
 
     const fanParams = params as Partial<FanState>;
 
     switch (command) {
       case "action.devices.commands.OnOff":
         state = { on: fanParams.on };
-        ref = firebaseRef.child(deviceId).child("OnOff");
         break;
       case "action.devices.commands.SetFanSpeed":
         state = {
           fanSpeedPercent: fanParams.fanSpeedPercent,
         };
-        ref = firebaseRef.child(deviceId).child("FanSpeed");
         break;
       default:
         console.log("Command not found", { command, deviceId });
