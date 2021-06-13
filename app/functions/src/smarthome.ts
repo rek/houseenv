@@ -114,6 +114,11 @@ export const getSmarthome = (admin: any) => {
 
     const fanParams = params as Partial<FanState>;
 
+    if (!fanParams) {
+      console.log("No params", { deviceId });
+      return Promise.reject();
+    }
+
     switch (command) {
       case "action.devices.commands.OnOff":
         state = { on: fanParams.on };

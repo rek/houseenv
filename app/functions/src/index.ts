@@ -6,6 +6,7 @@ import { faketoken, fakeauth, login, auth } from "./auth";
 import { getSmarthome } from "./smarthome";
 import { FanState } from "./types";
 import { getTempSync } from "./syncTemp";
+import { normalize } from "./normalize";
 
 // Initialize Firebase
 admin.initializeApp();
@@ -56,7 +57,7 @@ const reportstate = functions.database
           states: {
             /* Report the current state of our fan */
             [context.params.deviceId]: {
-              ...snapshot,
+              ...normalize(context.params.deviceId, snapshot),
             },
           },
         },
