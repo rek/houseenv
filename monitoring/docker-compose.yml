@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus-linux-arm64:latest
+    volumes:
+      - prometheus_data:/prometheus
+#      - ./prometheus/:/etc/prometheus/
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+#      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.enable-remote-write-receiver'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=1y'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    restart: always
+    network_mode: host
+volumes:
+  prometheus_data: {}
